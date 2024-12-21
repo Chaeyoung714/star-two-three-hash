@@ -14,4 +14,12 @@ public class RoomRepository {
     public void save(Room room) {
         em.persist(room);
     }
+
+    public Room findByRoomId(Long roomId) {
+        return em.createQuery("select r from Room r"
+                                + " where r.id = :roomId",
+                        Room.class)
+                .setParameter("roomId", roomId)
+                .getSingleResult();
+    }
 }

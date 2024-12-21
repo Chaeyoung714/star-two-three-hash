@@ -1,6 +1,8 @@
 package miniproject.star_two_three.controller;
 
 import lombok.RequiredArgsConstructor;
+import miniproject.star_two_three.dto.LoginRequestDTO;
+import miniproject.star_two_three.dto.LoginResponseDTO;
 import miniproject.star_two_three.dto.room.RoomRequestDTO;
 import miniproject.star_two_three.dto.room.RoomResponseDTO;
 import miniproject.star_two_three.service.RoomService;
@@ -24,4 +26,10 @@ public class RoomController {
         return roomService.createRoom(requestDTO);
     }
 
+    @PostMapping("/signin")
+    public LoginResponseDTO loginRoom(
+            @RequestBody LoginRequestDTO requestDTO
+            ) {
+        return roomService.login(requestDTO);
+    }
 }

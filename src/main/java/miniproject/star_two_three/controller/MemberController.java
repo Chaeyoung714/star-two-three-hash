@@ -18,22 +18,22 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/member")
 public class MemberController {
 
-    private final MemberService memberService;
-    private final JwtProvider jwtProvider;
-
-    @PostMapping("/signup/create")
-    public LoginResponseDTO join(
-            @RequestBody JoinRequestDTO requestDTO
-            ) {
-        return memberService.join(requestDTO);
-    }
-
-    @GetMapping("/signin")
-    public LoginResponseDTO login(
-            HttpServletRequest request
-            , @RequestBody LoginRequestDTO requestDTO
-    ) {
-        return memberService.login(requestDTO);
-    }
+//    private final MemberService memberService;
+//    private final JwtProvider jwtProvider;
+//
+//    @PostMapping("/signup/create")
+//    public LoginResponseDTO join(
+//            @RequestBody JoinRequestDTO requestDTO
+//            ) {
+//        return memberService.join(requestDTO);
+//    }
+//
+//    @GetMapping("/signin")
+//    public LoginResponseDTO login(
+//            HttpServletRequest request
+//            , @RequestBody LoginRequestDTO requestDTO
+//    ) {
+//        return memberService.login(requestDTO);
+//    }
 
 }
