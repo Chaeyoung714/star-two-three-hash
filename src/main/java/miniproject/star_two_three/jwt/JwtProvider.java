@@ -1,9 +1,11 @@
 package miniproject.star_two_three.jwt;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.UUID;
 import javax.crypto.SecretKey;

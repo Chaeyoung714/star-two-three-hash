@@ -17,7 +17,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-@Transactional
+//@Transactional
 public class MemberServiceTest {
 
     @Autowired
@@ -45,6 +45,7 @@ public class MemberServiceTest {
         Member member = memberRepository.findByLoginId("test");
 
         assertThat(responseDTO.getMessage()).isEqualTo(ResponseStatus.SUCCESS.getMessage());
+        assertThat(member.getId()).isEqualTo(1);
         assertThat(member.getNickname()).isEqualTo("테스트");
         assertThat(member.getPassword()).isEqualTo("1541");
     }
