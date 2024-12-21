@@ -17,11 +17,11 @@ public class JwtProvider {
 
     @Value("${spring.application.name}")
     private String issuer;
-    @Value("${service.jwt.access-expiration}")
+    @Value("${spring.jwt.access-expiration}")
     private Long accessExpiration;
-    @Value("${service.jwt.refresh-expiration}")
+    @Value("${spring.jwt.refresh-expiration}")
     private Long refreshExpiration;
-    @Value("${service.jwt.secret-key}")
+    @Value("${spring.jwt.secret-key}")
     private String key;
     private SecretKey secretKey;
 

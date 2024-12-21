@@ -2,6 +2,7 @@ package miniproject.star_two_three;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import io.github.cdimascio.dotenv.Dotenv;
 import jakarta.transaction.Transactional;
 import miniproject.star_two_three.domain.Member;
 import miniproject.star_two_three.dto.JoinRequestDTO;
@@ -9,9 +10,10 @@ import miniproject.star_two_three.dto.LoginResponseDTO;
 import miniproject.star_two_three.dto.ResponseStatus;
 import miniproject.star_two_three.repository.MemberRepository;
 import miniproject.star_two_three.service.MemberService;
-import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
@@ -23,6 +25,17 @@ public class MemberServiceTest {
 
     @Autowired
     private MemberRepository memberRepository;
+
+    @BeforeAll
+    static void setUp() {
+        Dotenv dotenv = Dotenv.configure()
+                .directory("./")
+                .load();
+        System.setProperty("RDS_URL", dotenv.get("RDS_URL"));
+        System.setProperty("RDS_USERNAME", dotenv.get("RDS_USERNAME"));
+        System.setProperty("RDS_PASSWORD", dotenv.get("RDS_PASSWORD"));
+        System.setProperty("JWT_SECRET_KEY", dotenv.get("JWT_SECRET_KEY"));
+    }
 
     @Test
     void 회원가입_테스트() {
