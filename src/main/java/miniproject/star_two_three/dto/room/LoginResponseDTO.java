@@ -1,4 +1,4 @@
-package miniproject.star_two_three.dto;
+package miniproject.star_two_three.dto.room;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;

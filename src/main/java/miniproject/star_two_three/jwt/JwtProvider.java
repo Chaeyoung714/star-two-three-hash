@@ -1,6 +1,8 @@
 package miniproject.star_two_three.jwt;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -10,6 +12,8 @@ import java.util.Date;
 import java.util.UUID;
 import javax.crypto.SecretKey;
 import lombok.RequiredArgsConstructor;
+import miniproject.star_two_three.exception.CustomException;
+import miniproject.star_two_three.exception.Exceptions;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -78,8 +82,8 @@ public class JwtProvider {
 //        return new TokenDTO(createToken(memberId, TokenType.ACCESS),
 //                createToken(memberId, TokenType.REFRESH));
 //    }
-//
-//
+
+
 //    /*로그아웃*/
 //    public void logout(String accessToken, String refreshToken) {
 //        Date accessTokenExpiration = Jwts.parser().verifyWith(secretKey).build()
@@ -90,30 +94,40 @@ public class JwtProvider {
 //        blackList.putToken(accessToken, accessTokenExpiration.toString());
 //        blackList.putToken(refreshToken, refreshTokenExpiration.toString());
 //    }
-//
-//
-//    /*토큰 유효성 확인 및 유저 ID 추출*/
-//    public Long getMemberId(HttpServletRequest request) {
-//        String token = this.resolveToken(request);
-//        Claims claims = Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload();
-//        Date now = new Date();
-//
-//        if (blackList.containsToken(token)) {
-//            throw new CustomException(Exceptions.BLACKLISTED_TOKEN);
-//        } else if (claims.getExpiration().before(now)) {
-//            throw new CustomException(Exceptions.EXPIRED_TOKEN);
-//        } else if (claims.getIssuedAt().after(new Date())) {
-//            throw new CustomException(Exceptions.PREMATURE_TOKEN);
-//        } else if (!claims.get("type").equals(TokenType.ACCESS.name())) {
-//            throw new CustomException(Exceptions.NOT_ACCESS_TOKEN);
-//        }
-//        return Long.parseLong(claims.getSubject());
-//    }
-//
-//
-//    /*요청 헤더에서 토큰 추출*/
-//    public String resolveToken(HttpServletRequest request) {
-//        String bearerToken = request.getHeader("Authorization");
-//        return bearerToken.replace("Bearer ", "");
-//    }
+
+
+    /*토큰 유효성 확인 및 유저 ID 추출*/
+    public Long getRoomId(HttpServletRequest request) {
+        try {
+            String token = this.resolveToken(request);
+            Claims claims = Jwts.parser().verifyWith(secretKey)
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload();
+            Date now = new Date();
+
+            if (claims.getExpiration().before(now)) {
+                throw new CustomException(Exceptions.EXPIRED_TOKEN);
+            }
+            if (claims.get("type") == null) {
+                throw new CustomException(Exceptions.INVALID_TOKEN_TYPE);
+            }
+            if (!claims.get("type").equals(TokenType.ACCESS.name())) {
+                throw new CustomException(Exceptions.NOT_ACCESS_TOKEN);
+            }
+            return Long.parseLong(claims.getSubject());
+        } catch (JwtException e) {
+            throw new CustomException(Exceptions.INVALID_TOKEN);
+        }
+    }
+
+
+    /*요청 헤더에서 토큰 추출*/
+    public String resolveToken(HttpServletRequest request) {
+        String bearerToken = request.getHeader("Authorization");
+        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.replace("Bearer ", "");
+        }
+        throw new CustomException(Exceptions.NO_TOKEN);
+    }
 }

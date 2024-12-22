@@ -2,18 +2,6 @@ package miniproject.star_two_three;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import io.github.cdimascio.dotenv.Dotenv;
-import jakarta.transaction.Transactional;
-import miniproject.star_two_three.domain.Member;
-import miniproject.star_two_three.dto.JoinRequestDTO;
-import miniproject.star_two_three.dto.LoginResponseDTO;
-import miniproject.star_two_three.dto.ResponseStatus;
-import miniproject.star_two_three.repository.MemberRepository;
-import miniproject.star_two_three.service.MemberService;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest

@@ -1,16 +1,7 @@
 package miniproject.star_two_three.service;
 
-import jakarta.persistence.NoResultException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import miniproject.star_two_three.domain.Member;
-import miniproject.star_two_three.dto.JoinRequestDTO;
-import miniproject.star_two_three.dto.LoginRequestDTO;
-import miniproject.star_two_three.dto.LoginResponseDTO;
-import miniproject.star_two_three.dto.ResponseStatus;
-import miniproject.star_two_three.jwt.JwtProvider;
-import miniproject.star_two_three.jwt.TokenType;
-import miniproject.star_two_three.repository.MemberRepository;
 import org.springframework.stereotype.Service;
 
 @Service

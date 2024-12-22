@@ -3,9 +3,9 @@ package miniproject.star_two_three.service;
 import jakarta.persistence.NoResultException;
 import lombok.RequiredArgsConstructor;
 import miniproject.star_two_three.domain.Room;
-import miniproject.star_two_three.dto.LoginRequestDTO;
-import miniproject.star_two_three.dto.LoginResponseDTO;
-import miniproject.star_two_three.dto.ResponseStatus;
+import miniproject.star_two_three.dto.room.LoginRequestDTO;
+import miniproject.star_two_three.dto.room.LoginResponseDTO;
+import miniproject.star_two_three.dto.room.ResponseStatus;
 import miniproject.star_two_three.dto.room.RoomRequestDTO;
 import miniproject.star_two_three.dto.room.RoomResponseDTO;
 import miniproject.star_two_three.jwt.JwtProvider;
@@ -34,7 +34,7 @@ public class RoomService {
         roomRepository.save(room);
 
         String hashedRoomId = HashEncoder.encryptLongValue(room.getId());
-        room.setUrl(hashedRoomId);
+        room.setSignature(hashedRoomId);
 
         String accessToken = jwtProvider.createToken(room.getId(), TokenType.ACCESS);
         String refreshToken = jwtProvider.createToken(room.getId(), TokenType.REFRESH);
@@ -54,14 +54,14 @@ public class RoomService {
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, accessTokenCookie.toString())
                 .header(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString())
-                .body(new RoomResponseDTO(room.getUrl()));
+                .body(new RoomResponseDTO(room.getSignature()));
     }
 
     public LoginResponseDTO login(LoginRequestDTO request) {
         try {
-            Long roomId = Long.valueOf(HashDecoder.decrypt(request.getUrl()));
+            Long roomId = Long.valueOf(HashDecoder.decrypt(request.getRoomSignature()));
             Room room = roomRepository.findByRoomId(roomId);
-            if (room.getUrl().equals(request.getUrl())) {
+            if (room.getSignature().equals(request.getRoomSignature())) {
                 return new LoginResponseDTO(
                         ResponseStatus.SUCCESS,
                         jwtProvider.createToken(room.getId(), TokenType.ACCESS),
@@ -76,4 +76,9 @@ public class RoomService {
                     "");
         }
     }
+
+//    public ResponseDTO<TokenDTO> tokenReissue(String refreshToken) {
+//        TokenDTO tokens = jwtProvider.refreshAccessToken(refreshToken);
+//        return new ResponseDTO<>(tokens, Responses.OK);
+//    }
 }

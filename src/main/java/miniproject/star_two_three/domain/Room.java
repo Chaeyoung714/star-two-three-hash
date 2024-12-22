@@ -26,7 +26,7 @@ public class Room {
 
     private String password;
 
-    private String url;
+    private String signature;
 
     @OneToMany(mappedBy = "room")
     private List<Message> messages;
@@ -37,7 +37,11 @@ public class Room {
         this.messages = new ArrayList<>();
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void updateMessage(Message message) {
+        this.messages.add(message);
+    }
+
+    public void setSignature(String signature) {
+        this.signature = signature;
     }
 }
