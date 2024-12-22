@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.UUID;
 import javax.crypto.SecretKey;
 import lombok.RequiredArgsConstructor;
+import miniproject.star_two_three.dto.jwt.TokenResponseDTO;
 import miniproject.star_two_three.exception.CustomException;
 import miniproject.star_two_three.exception.Exceptions;
 import org.springframework.beans.factory.annotation.Value;
@@ -61,30 +62,21 @@ public class JwtProvider {
     }
 
 
-//    /*리프레시 토큰 검증 후 새로운 액세스 토큰 발급*/
-//    public TokenDTO refreshAccessToken(String refreshToken) {
-//        Jws<Claims> claims = Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(refreshToken);
-//        if (!claims.getPayload().get("type").equals(TokenType.REFRESH.name())) {
-//            throw new CustomException(Exceptions.INVALID_TOKEN);
-//        }
-//        if (claims.getPayload().getIssuedAt().after(new Date())) {
-//            throw new CustomException(Exceptions.INVALID_ISSUED_TIME);
-//        }
-//        Date expireAt = claims.getPayload().getExpiration();
-//        if (expireAt.before(new Date())) {
-//            throw new CustomException(Exceptions.EXPIRED_TOKEN);
-//        }
-//        if (blackList.containsToken(refreshToken)) {
-//            throw new CustomException(Exceptions.BLACKLISTED_TOKEN);
-//        }
-//        Long memberId = Long.parseLong(claims.getPayload().getSubject());
-//        blackList.putToken(refreshToken, expireAt.toString());
-//        return new TokenDTO(createToken(memberId, TokenType.ACCESS),
-//                createToken(memberId, TokenType.REFRESH));
-//    }
+    /*리프레시 토큰 검증 후 새로운 액세스 토큰 발급*/
+    public TokenResponseDTO refreshAccessToken(String refreshToken) {
+        Claims claims = Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(refreshToken).getPayload();
+        if (claims.getExpiration().before(new Date())) {
+            throw new CustomException(Exceptions.EXPIRED_TOKEN);
+        }
+        if (!claims.get("type").equals(TokenType.REFRESH.name())) {
+            throw new CustomException(Exceptions.NOT_REFRESH_TOKEN);
+        }
+        Long memberId = Long.parseLong(claims.getSubject());
+        return new TokenResponseDTO(createToken(memberId, TokenType.ACCESS));
+    }
 
 
-//    /*로그아웃*/
+    /*로그아웃*/
 //    public void logout(String accessToken, String refreshToken) {
 //        Date accessTokenExpiration = Jwts.parser().verifyWith(secretKey).build()
 //                .parseSignedClaims(accessToken).getPayload().getExpiration();

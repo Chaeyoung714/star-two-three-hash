@@ -8,6 +8,9 @@ public enum Exceptions {
     INVALID_TOKEN_TYPE("invalid token type", HttpStatus.UNAUTHORIZED),
     NO_TOKEN("no token", HttpStatus.UNAUTHORIZED),
     INVALID_TOKEN("invalid token", HttpStatus.UNAUTHORIZED),
+
+    NOT_REFRESH_TOKEN("not refresh token", HttpStatus.UNAUTHORIZED),
+
     ;
 
     private final String message;

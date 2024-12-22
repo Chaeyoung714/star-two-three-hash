@@ -1,12 +1,14 @@
 package miniproject.star_two_three.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import miniproject.star_two_three.dto.jwt.TokenResponseDTO;
 import miniproject.star_two_three.dto.room.LoginRequestDTO;
-import miniproject.star_two_three.dto.room.LoginResponseDTO;
 import miniproject.star_two_three.dto.room.RoomRequestDTO;
 import miniproject.star_two_three.dto.room.RoomResponseDTO;
 import miniproject.star_two_three.service.RoomService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,9 +29,16 @@ public class RoomController {
     }
 
     @PostMapping("/signin")
-    public LoginResponseDTO loginRoom(
+    public ResponseEntity<TokenResponseDTO> loginRoom(
             @RequestBody LoginRequestDTO requestDTO
             ) {
         return roomService.login(requestDTO);
+    }
+
+    @GetMapping("/token/reissue")
+    public ResponseEntity<TokenResponseDTO> reissueToken(
+            HttpServletRequest request
+    ) {
+        return roomService.reissueToken(request);
     }
 }
