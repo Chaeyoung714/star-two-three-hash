@@ -15,6 +15,7 @@ import miniproject.star_two_three.repository.RoomRepository;
 import miniproject.star_two_three.util.CookieParser;
 import miniproject.star_two_three.util.HashEncoder;
 import miniproject.star_two_three.util.HashDecoder;
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
@@ -32,7 +33,7 @@ public class RoomService {
 
     public ResponseEntity<RoomResponseDTO> createRoom(RoomRequestDTO request) {
         //TODO : 값 검증
-        String password = request.getPassword(); //TODO : encrypt
+        String password = BCrypt.hashpw(request.getPassword(), BCrypt.gensalt()); //TODO : encrypt
         Room room = new Room(request.getTitle(), password);
         roomRepository.save(room);
 
@@ -64,7 +65,7 @@ public class RoomService {
         try {
             Long roomId = Long.valueOf(HashDecoder.decrypt(request.getRoomSignature()));
             Room room = roomRepository.findByRoomId(roomId);
-            if (room.getSignature().equals(request.getRoomSignature())) {
+            if (BCrypt.checkpw(request.getPassword(), room.getPassword())) {
                 String accessToken = jwtProvider.createToken(room.getId(), TokenType.ACCESS);
                 String refreshToken = jwtProvider.createToken(room.getId(), TokenType.REFRESH);
                 ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", refreshToken)
@@ -77,8 +78,8 @@ public class RoomService {
                         .header(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString())
                         .body(new TokenResponseDTO(accessToken));
             }
-            throw new IllegalArgumentException();
-        } catch (NoResultException | IllegalArgumentException e) { //비번 틀렸을 때
+            throw new IllegalArgumentException("비밀번호가 틀렸습니다.");
+        } catch (NoResultException | IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(null);
         }
