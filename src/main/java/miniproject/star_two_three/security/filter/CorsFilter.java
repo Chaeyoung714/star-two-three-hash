@@ -23,7 +23,7 @@ public class CorsFilter implements Filter {
             "http://localhost:3000",
             "https://localhost:3000",
             "http://3.38.8.19.nip.io",
-            "https://3.38.8.19.nip.io/"
+            "https://3.38.8.19.nip.io"
     );
 
     @Override
