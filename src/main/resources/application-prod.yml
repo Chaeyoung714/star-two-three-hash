@@ -1,6 +1,19 @@
 spring:
+  config:
+    activate:
+      on-profile: prod
   datasource:
     url: ${RDS_URL}
     username: ${RDS_USERNAME}
     password: ${RDS_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        show_sql: false
+        format_sql: false
+  logging.level:
+    org.hibernate.SQL: warn
+    org.hibernate.type: warn
