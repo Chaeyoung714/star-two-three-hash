@@ -1,6 +1,7 @@
 package miniproject.star_two_three.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import miniproject.star_two_three.dto.jwt.TokenResponseDTO;
 import miniproject.star_two_three.dto.room.LoginRequestDTO;
@@ -23,14 +24,14 @@ public class RoomController {
 
     @PostMapping("/create")
     public ResponseEntity<RoomResponseDTO> postRoom(
-            @RequestBody RoomRequestDTO requestDTO
+            @Valid @RequestBody RoomRequestDTO requestDTO
     ) {
         return roomService.createRoom(requestDTO);
     }
 
     @PostMapping("/signin")
     public ResponseEntity<TokenResponseDTO> loginRoom(
-            @RequestBody LoginRequestDTO requestDTO
+           @Valid @RequestBody LoginRequestDTO requestDTO
             ) {
         return roomService.login(requestDTO);
     }

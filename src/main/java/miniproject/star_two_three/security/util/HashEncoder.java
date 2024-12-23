@@ -5,15 +5,17 @@ import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
+@Component
 public class HashEncoder {
 
     @Value("${spring.password.secret-key}")
-    private static String secretKey;
-    private static final byte[] SECRET_KEY = secretKey.getBytes();
+    private String secretKey;
 
-    public static String encryptLongValue(Long value){
+    public String encryptLongValue(Long value){
         try {
+            byte[] SECRET_KEY = secretKey.getBytes();
             Cipher cipher = Cipher.getInstance("AES");
             SecretKey secretKey = new SecretKeySpec(SECRET_KEY, "AES");
             cipher.init(Cipher.ENCRYPT_MODE, secretKey);
@@ -24,22 +26,4 @@ public class HashEncoder {
             throw new IllegalStateException("unexpected exception during encoding");
         }
     }
-
-//    // Long 값을 바이트 배열로 변환하는 메소드
-//    private static byte[] longToBytes(Long value) {
-//        byte[] bytes = new byte[8];
-//        for (int i = 0; i < 8; i++) {
-//            bytes[i] = (byte) (value >>> (56 - (i * 8)));
-//        }
-//        return bytes;
-//    }
-//
-//    // 바이트 배열을 16진수 문자열로 변환하는 메소드
-//    private static String bytesToHex(byte[] bytes) {
-//        StringBuilder hexString = new StringBuilder();
-//        for (byte b : bytes) {
-//            hexString.append(String.format("%02x", b));
-//        }
-//        return hexString.toString();
-//    }
 }

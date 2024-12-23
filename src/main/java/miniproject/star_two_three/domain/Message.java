@@ -8,6 +8,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,12 +25,16 @@ public class Message {
     @Column(name = "message_id")
     private Long id;
 
+    @NotNull @NotEmpty(message = "Sender nickname must not be empty.")
+    @Size(min = 1, max = 10, message = "Sender nickname length must be 1 to 10.")
     private String sender;
 
+    @NotNull @NotEmpty(message = "Message text must not be empty.")
+    @Size(min = 1, max = 500, message = "Message text length must be 1 to 500.")
     private String body;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "room_id") //FK이자 연관관계의 주인필드
+    @JoinColumn(name = "room_id")
     private Room room;
 
     public Message(Room room, String body, String sender) {

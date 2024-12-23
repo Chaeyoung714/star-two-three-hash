@@ -13,6 +13,7 @@ public enum Exceptions {
     NO_READ_AUTHORITY("not have read authority", HttpStatus.UNAUTHORIZED),
     MESSAGE_NOT_FOUND("message of such id not found", HttpStatus.BAD_REQUEST),
     ROOM_NOT_FOUND("room of such id not found", HttpStatus.BAD_REQUEST),
+    INVALID_PASSWORD("invalid password", HttpStatus.BAD_REQUEST),
     ;
 
     private final String message;

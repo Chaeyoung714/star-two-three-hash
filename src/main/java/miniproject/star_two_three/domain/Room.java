@@ -6,6 +6,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
@@ -22,8 +25,11 @@ public class Room {
     @Column(name = "room_id")
     private Long id;
 
+    @NotNull @NotEmpty(message = "Title must not be empty.")
+    @Size(min = 1, max = 10, message = "Title length must be 1 to 10.")
     private String title;
 
+    @NotNull @NotEmpty(message = "Password must not be empty.")
     private String password;
 
     private String signature;

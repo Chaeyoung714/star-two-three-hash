@@ -1,6 +1,7 @@
 package miniproject.star_two_three.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import miniproject.star_two_three.dto.message.MessageResponseDTO;
@@ -52,7 +53,7 @@ public class MessageController {
 
     @PostMapping("/create")
     public ResponseEntity<MessageResponseDTO> postMessage(
-            @RequestBody MessageRequestDTO messageRequestDTO
+            @Valid @RequestBody MessageRequestDTO messageRequestDTO
             ) {
         return messageService.createMessage(messageRequestDTO);
     }

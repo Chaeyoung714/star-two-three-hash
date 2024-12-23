@@ -1,6 +1,5 @@
 package miniproject.star_two_three.service;
 
-import jakarta.persistence.NoResultException;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +12,7 @@ import miniproject.star_two_three.exception.Exceptions;
 import miniproject.star_two_three.repository.MessageRepository;
 import miniproject.star_two_three.repository.RoomRepository;
 import miniproject.star_two_three.security.util.HashDecoder;
+import miniproject.star_two_three.security.util.HashEncoder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -25,6 +25,7 @@ public class MessageService {
 
     private final MessageRepository messageRepository;
     private final RoomRepository roomRepository;
+    private final HashDecoder hashDecoder;
 
     public ResponseEntity<List<MessageResponseDTO>> readPaginatedMessageList(Long roomId) {
         //TODO : 페이지네이션
@@ -49,7 +50,7 @@ public class MessageService {
 
     public ResponseEntity<MessageResponseDTO> createMessage(MessageRequestDTO request) {
         try {
-            Long roomId = Long.valueOf(HashDecoder.decrypt(request.getRoomSignature()));
+            Long roomId = Long.valueOf(hashDecoder.decrypt(request.getRoomSignature()));
             Room room = findRoomByIdOrElseException(roomId);
             Message message = new Message(room, request.getBody(), request.getSender());
             messageRepository.save(message);
