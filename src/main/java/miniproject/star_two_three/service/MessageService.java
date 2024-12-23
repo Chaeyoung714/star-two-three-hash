@@ -10,6 +10,8 @@ import miniproject.star_two_three.dto.message.MessageRequestDTO;
 import miniproject.star_two_three.repository.MessageRepository;
 import miniproject.star_two_three.repository.RoomRepository;
 import miniproject.star_two_three.util.HashDecoder;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -23,7 +25,8 @@ public class MessageService {
     private final MessageRepository messageRepository;
     private final RoomRepository roomRepository;
 
-    public ResponseEntity<List<MessageResponseDTO>> readMessageList(Long roomId) {
+    public ResponseEntity<List<MessageResponseDTO>> readPaginatedMessageList(Long roomId) {
+        //TODO : 페이지네이션
         List<Message> messages = messageRepository.findAllByRoomId(roomId);
         List<MessageResponseDTO> response = messages.stream()
                 .map(m -> new MessageResponseDTO(m.getId(), m.getNickname(), m.getBody()))

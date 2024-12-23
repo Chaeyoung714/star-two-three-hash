@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -31,7 +32,7 @@ public class MessageController {
     ) {
         try {
             Long roomId = jwtProvider.getRoomId(request);
-            return messageService.readMessageList(roomId);
+            return messageService.readPaginatedMessageList(roomId);
         } catch (CustomException e) {
             return ResponseEntity.status(e.getHttpStatus()).body(null); //TODO : 메세지 함께 응답
         }
