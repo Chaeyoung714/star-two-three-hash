@@ -14,7 +14,9 @@ import java.util.List;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 
+@Validated
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

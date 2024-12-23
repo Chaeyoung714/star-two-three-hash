@@ -1,9 +1,7 @@
 package miniproject.star_two_three.service;
 
-import jakarta.persistence.NoResultException;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Optional;
-import jdk.jshell.spi.ExecutionControlProvider;
 import lombok.RequiredArgsConstructor;
 import miniproject.star_two_three.domain.Room;
 import miniproject.star_two_three.dto.jwt.TokenResponseDTO;
@@ -20,7 +18,6 @@ import miniproject.star_two_three.security.util.HashEncoder;
 import miniproject.star_two_three.security.util.HashDecoder;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -36,33 +33,28 @@ public class RoomService {
     private final HashDecoder hashDecoder;
     private final HashEncoder hashEncoder;
 
+
     public ResponseEntity<RoomResponseDTO> createRoom(RoomRequestDTO request) {
-        //TODO : 값 검증
-        try {
-            validatePassword(request.getPassword());
-            String password = BCrypt.hashpw(request.getPassword(), BCrypt.gensalt());
-            Room room = new Room(request.getTitle(), password);
-            roomRepository.save(room);
+        validatePassword(request.getPassword());
+        String password = BCrypt.hashpw(request.getPassword(), BCrypt.gensalt());
+        Room room = new Room(request.getTitle(), password);
+        roomRepository.save(room);
 
-            String hashedRoomId = hashEncoder.encryptLongValue(room.getId());
-            room.setSignature(hashedRoomId);
+        String hashedRoomId = hashEncoder.encryptLongValue(room.getId());
+        room.setSignature(hashedRoomId);
 
-            String accessToken = jwtProvider.createToken(room.getId(), TokenType.ACCESS);
-            String refreshToken = jwtProvider.createToken(room.getId(), TokenType.REFRESH);
-            ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", refreshToken)
-                    .httpOnly(true)
-                    .secure(true)
-                    .path("/")
-                    .sameSite("Strict")
-                    .build();
+        String accessToken = jwtProvider.createToken(room.getId(), TokenType.ACCESS);
+        String refreshToken = jwtProvider.createToken(room.getId(), TokenType.REFRESH);
+        ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", refreshToken)
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .sameSite("Strict")
+                .build();
 
-            return ResponseEntity.ok()
-                    .header(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString())
-                    .body(new RoomResponseDTO(room.getSignature(), accessToken));
-        } catch (CustomException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(null);
-        }
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString())
+                .body(new RoomResponseDTO(room.getSignature(), accessToken));
     }
 
     private void validatePassword(String password) {
@@ -72,39 +64,29 @@ public class RoomService {
     }
 
     public ResponseEntity<TokenResponseDTO> login(LoginRequestDTO request) {
-        try {
-            Long roomId = Long.valueOf(hashDecoder.decrypt(request.getRoomSignature()));
-            Room room = findRoomByIdOrElseException(roomId);
-            if (BCrypt.checkpw(request.getPassword(), room.getPassword())) {
-                String accessToken = jwtProvider.createToken(room.getId(), TokenType.ACCESS);
-                String refreshToken = jwtProvider.createToken(room.getId(), TokenType.REFRESH);
-                ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", refreshToken)
-                        .httpOnly(true)
-                        .secure(true)
-                        .path("/")
-                        .sameSite("Strict")
-                        .build();
-                return ResponseEntity.ok()
-                        .header(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString())
-                        .body(new TokenResponseDTO(accessToken));
-            }
-            throw new IllegalArgumentException("비밀번호가 틀렸습니다.");
-        } catch (NoResultException | IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(null);
+        Long roomId = Long.valueOf(hashDecoder.decrypt(request.getRoomSignature()));
+        Room room = findRoomByIdOrElseException(roomId);
+        if (BCrypt.checkpw(request.getPassword(), room.getPassword())) {
+            String accessToken = jwtProvider.createToken(room.getId(), TokenType.ACCESS);
+            String refreshToken = jwtProvider.createToken(room.getId(), TokenType.REFRESH);
+            ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", refreshToken)
+                    .httpOnly(true)
+                    .secure(true)
+                    .path("/")
+                    .sameSite("Strict")
+                    .build();
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString())
+                    .body(new TokenResponseDTO(accessToken));
         }
+        throw new CustomException(Exceptions.WRONG_PASSWORD);
     }
 
     public ResponseEntity<TokenResponseDTO> reissueToken(HttpServletRequest request) {
-        try {
-            String refreshToken = CookieParser.parseRefreshToken(request);
-            TokenResponseDTO tokens = jwtProvider.refreshAccessToken(refreshToken);
-            return ResponseEntity.ok()
-                    .body(tokens);
-        } catch (CustomException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(null);
-        }
+        String refreshToken = CookieParser.parseRefreshToken(request);
+        TokenResponseDTO tokens = jwtProvider.refreshAccessToken(refreshToken);
+        return ResponseEntity.ok()
+                .body(tokens);
     }
 
     private Room findRoomByIdOrElseException(Long roomId) {

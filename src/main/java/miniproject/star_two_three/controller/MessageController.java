@@ -6,7 +6,6 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import miniproject.star_two_three.dto.message.MessageResponseDTO;
 import miniproject.star_two_three.dto.message.MessageRequestDTO;
-import miniproject.star_two_three.exception.CustomException;
 import miniproject.star_two_three.security.jwt.JwtProvider;
 import miniproject.star_two_three.service.MessageService;
 import org.springframework.http.ResponseEntity;
@@ -30,12 +29,8 @@ public class MessageController {
     public ResponseEntity<List<MessageResponseDTO>> getMessageList(
             HttpServletRequest request
     ) {
-        try {
-            Long roomId = jwtProvider.getRoomId(request);
-            return messageService.readPaginatedMessageList(roomId);
-        } catch (CustomException e) {
-            return ResponseEntity.status(e.getHttpStatus()).body(null); //TODO : 메세지 함께 응답
-        }
+        Long roomId = jwtProvider.getRoomId(request);
+        return messageService.readPaginatedMessageList(roomId);
     }
 
     @GetMapping("/get/received/{messageId}")
@@ -43,12 +38,8 @@ public class MessageController {
             HttpServletRequest request
             , @PathVariable(name = "messageId") Long messageId
     ) {
-        try {
-            Long roomId = jwtProvider.getRoomId(request);
-            return messageService.readDetailMessage(roomId, messageId);
-        } catch (CustomException e) {
-            return ResponseEntity.status(e.getHttpStatus()).body(null); //TODO : 메세지 함께 응답
-        }
+        Long roomId = jwtProvider.getRoomId(request);
+        return messageService.readDetailMessage(roomId, messageId);
     }
 
     @PostMapping("/create")
@@ -63,12 +54,8 @@ public class MessageController {
             HttpServletRequest request
             , @PathVariable(name = "messageId") Long messageId
     ) {
-        try {
-            Long roomId = jwtProvider.getRoomId(request);
-            return messageService.deleteMessage(roomId, messageId);
-        } catch (CustomException e) {
-            return ResponseEntity.status(e.getHttpStatus()).body(null); //TODO : 메세지 함께 응답
-        }
+        Long roomId = jwtProvider.getRoomId(request);
+        return messageService.deleteMessage(roomId, messageId);
     }
 
 }

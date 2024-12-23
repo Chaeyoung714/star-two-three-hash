@@ -12,7 +12,6 @@ import miniproject.star_two_three.exception.Exceptions;
 import miniproject.star_two_three.repository.MessageRepository;
 import miniproject.star_two_three.repository.RoomRepository;
 import miniproject.star_two_three.security.util.HashDecoder;
-import miniproject.star_two_three.security.util.HashEncoder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -38,42 +37,26 @@ public class MessageService {
     }
 
     public ResponseEntity<MessageResponseDTO> readDetailMessage(Long roomId, Long messageId) {
-        try {
-            Message message = findMessageByIdOrElseException(messageId, roomId);
-            return ResponseEntity.ok()
-                    .body(new MessageResponseDTO(message.getId(), message.getSender(), message.getBody()));
-        } catch (CustomException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(null); //TODO : 응답형식 통일하기
-        }
+        Message message = findMessageByIdOrElseException(messageId, roomId);
+        return ResponseEntity.ok()
+                .body(new MessageResponseDTO(message.getId(), message.getSender(), message.getBody()));
     }
 
     public ResponseEntity<MessageResponseDTO> createMessage(MessageRequestDTO request) {
-        try {
-            Long roomId = Long.valueOf(hashDecoder.decrypt(request.getRoomSignature()));
-            Room room = findRoomByIdOrElseException(roomId);
-            Message message = new Message(room, request.getBody(), request.getSender());
-            messageRepository.save(message);
-            room.updateMessage(message);
-            return ResponseEntity.ok()
-                    .body(new MessageResponseDTO(message.getId(), message.getSender(), message.getBody()));
-
-        } catch (CustomException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(null);
-        }
+        Long roomId = Long.valueOf(hashDecoder.decrypt(request.getRoomSignature()));
+        Room room = findRoomByIdOrElseException(roomId);
+        Message message = new Message(room, request.getBody(), request.getSender());
+        messageRepository.save(message);
+        room.updateMessage(message);
+        return ResponseEntity.ok()
+                .body(new MessageResponseDTO(message.getId(), message.getSender(), message.getBody()));
     }
 
     public ResponseEntity<String> deleteMessage(Long roomId, Long messageId) {
-        try {
-            Message message = findMessageByIdOrElseException(messageId, roomId);
-            messageRepository.delete(message);
-            return ResponseEntity.status(HttpStatus.NO_CONTENT)
-                    .body("successfully deleted");
-        } catch (CustomException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(null);
-        }
+        Message message = findMessageByIdOrElseException(messageId, roomId);
+        messageRepository.delete(message);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .body("successfully deleted");
     }
 
     private Message findMessageByIdOrElseException(Long messageId, Long roomId) {
