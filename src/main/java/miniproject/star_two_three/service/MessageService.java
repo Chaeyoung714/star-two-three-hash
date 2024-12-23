@@ -50,14 +50,14 @@ public class MessageService {
     public ResponseEntity<MessageResponseDTO> createMessage(MessageRequestDTO request) {
         try {
             Long roomId = Long.valueOf(HashDecoder.decrypt(request.getRoomSignature()));
-            Room room = roomRepository.findByRoomId(roomId);
+            Room room = findRoomByIdOrElseException(roomId);
             Message message = new Message(request.getNickname(), request.getBody(), room);
             messageRepository.save(message);
             room.updateMessage(message);
             return ResponseEntity.ok()
                     .body(new MessageResponseDTO(message.getId(), message.getNickname(), message.getBody()));
 
-        } catch (NoResultException e) {
+        } catch (CustomException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(null);
         }
@@ -84,5 +84,13 @@ public class MessageService {
             throw new CustomException(Exceptions.NO_READ_AUTHORITY);
         }
         return message.get();
+    }
+
+    private Room findRoomByIdOrElseException(Long roomId) {
+        Optional<Room> room = roomRepository.findByRoomId(roomId);
+        if (room.isEmpty()) {
+            throw new CustomException(Exceptions.ROOM_NOT_FOUND);
+        }
+        return room.get();
     }
 }

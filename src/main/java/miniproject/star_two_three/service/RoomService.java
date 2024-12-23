@@ -2,6 +2,7 @@ package miniproject.star_two_three.service;
 
 import jakarta.persistence.NoResultException;
 import jakarta.servlet.http.HttpServletRequest;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import miniproject.star_two_three.domain.Room;
 import miniproject.star_two_three.dto.jwt.TokenResponseDTO;
@@ -9,6 +10,7 @@ import miniproject.star_two_three.dto.room.LoginRequestDTO;
 import miniproject.star_two_three.dto.room.RoomRequestDTO;
 import miniproject.star_two_three.dto.room.RoomResponseDTO;
 import miniproject.star_two_three.exception.CustomException;
+import miniproject.star_two_three.exception.Exceptions;
 import miniproject.star_two_three.security.jwt.JwtProvider;
 import miniproject.star_two_three.security.jwt.TokenType;
 import miniproject.star_two_three.repository.RoomRepository;
@@ -33,7 +35,7 @@ public class RoomService {
 
     public ResponseEntity<RoomResponseDTO> createRoom(RoomRequestDTO request) {
         //TODO : 값 검증
-        String password = BCrypt.hashpw(request.getPassword(), BCrypt.gensalt()); //TODO : encrypt
+        String password = BCrypt.hashpw(request.getPassword(), BCrypt.gensalt());
         Room room = new Room(request.getTitle(), password);
         roomRepository.save(room);
 
@@ -64,7 +66,7 @@ public class RoomService {
     public ResponseEntity<TokenResponseDTO> login(LoginRequestDTO request) {
         try {
             Long roomId = Long.valueOf(HashDecoder.decrypt(request.getRoomSignature()));
-            Room room = roomRepository.findByRoomId(roomId);
+            Room room = findRoomByIdOrElseException(roomId);
             if (BCrypt.checkpw(request.getPassword(), room.getPassword())) {
                 String accessToken = jwtProvider.createToken(room.getId(), TokenType.ACCESS);
                 String refreshToken = jwtProvider.createToken(room.getId(), TokenType.REFRESH);
@@ -95,5 +97,13 @@ public class RoomService {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(null);
         }
+    }
+
+    private Room findRoomByIdOrElseException(Long roomId) {
+        Optional<Room> room = roomRepository.findByRoomId(roomId);
+        if (room.isEmpty()) {
+            throw new CustomException(Exceptions.ROOM_NOT_FOUND);
+        }
+        return room.get();
     }
 }
