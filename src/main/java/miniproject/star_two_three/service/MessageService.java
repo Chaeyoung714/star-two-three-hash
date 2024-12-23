@@ -7,11 +7,15 @@ import miniproject.star_two_three.domain.Message;
 import miniproject.star_two_three.domain.Room;
 import miniproject.star_two_three.dto.message.MessageResponseDTO;
 import miniproject.star_two_three.dto.message.MessageRequestDTO;
+import miniproject.star_two_three.dto.message.PagedMessagesResponseDTO;
 import miniproject.star_two_three.exception.CustomException;
 import miniproject.star_two_three.exception.Exceptions;
 import miniproject.star_two_three.repository.MessageRepository;
 import miniproject.star_two_three.repository.RoomRepository;
 import miniproject.star_two_three.security.util.HashDecoder;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -22,18 +26,24 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class MessageService {
 
+    private static final int pageSize = 10;
+
     private final MessageRepository messageRepository;
     private final RoomRepository roomRepository;
     private final HashDecoder hashDecoder;
 
-    public ResponseEntity<List<MessageResponseDTO>> readPaginatedMessageList(Long roomId) {
-        //TODO : 페이지네이션
-        List<Message> messages = messageRepository.findAllByRoomId(roomId);
-        List<MessageResponseDTO> response = messages.stream()
+    public ResponseEntity<PagedMessagesResponseDTO> readPaginatedMessageList(Long roomId, int pagePointer) {
+        Pageable pageable = PageRequest.of(pagePointer, pageSize);
+        Page<Message> pagedMessages = messageRepository.findPageByRoomId(roomId, pageable);
+        List<MessageResponseDTO> response = pagedMessages.getContent().stream()
                 .map(m -> new MessageResponseDTO(m.getId(), m.getSender(), m.getBody()))
                 .toList();
         return ResponseEntity.ok()
-                .body(response);
+                .body(new PagedMessagesResponseDTO(pagedMessages.getNumber()
+                        , pagedMessages.getSize()
+                        , pagedMessages.getTotalPages()
+                        , pagedMessages.getTotalElements()
+                        , response));
     }
 
     public ResponseEntity<MessageResponseDTO> readDetailMessage(Long roomId, Long messageId) {
@@ -60,7 +70,7 @@ public class MessageService {
     }
 
     private Message findMessageByIdOrElseException(Long messageId, Long roomId) {
-        Optional<Message> message = messageRepository.findById(messageId);
+        Optional<Message> message = messageRepository.findByIdOrEmpty(messageId);
         if (message.isEmpty()) {
             throw new CustomException(Exceptions.MESSAGE_NOT_FOUND);
         }
