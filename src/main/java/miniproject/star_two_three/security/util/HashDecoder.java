@@ -4,11 +4,13 @@ import java.util.Base64;
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
+import org.springframework.beans.factory.annotation.Value;
 
 public class HashDecoder {
 
-    //TODO : 수정
-    private static final byte[] SECRET_KEY = "1234567890123456".getBytes();
+    @Value("${spring.password.secret-key}")
+    private static String secretKey;
+    private static final byte[] SECRET_KEY = secretKey.getBytes();
 
 
     public static String decrypt(String encryptedValue) {

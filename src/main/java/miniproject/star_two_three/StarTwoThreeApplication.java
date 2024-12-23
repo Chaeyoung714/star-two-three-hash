@@ -16,6 +16,7 @@ public class StarTwoThreeApplication {
 		System.setProperty("RDS_USERNAME", dotenv.get("RDS_USERNAME"));
 		System.setProperty("RDS_PASSWORD", dotenv.get("RDS_PASSWORD"));
 		System.setProperty("JWT_SECRET_KEY", dotenv.get("JWT_SECRET_KEY"));
+		System.setProperty("PASSWORD_SECRET_KEY", dotenv.get("PASSWORD_SECRET_KEY"));
 
 		SpringApplication.run(StarTwoThreeApplication.class, args);
 	}
