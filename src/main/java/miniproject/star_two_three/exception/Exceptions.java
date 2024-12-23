@@ -10,7 +10,7 @@ public enum Exceptions {
     INVALID_TOKEN("invalid token", HttpStatus.UNAUTHORIZED),
 
     NOT_REFRESH_TOKEN("not refresh token", HttpStatus.UNAUTHORIZED),
-
+    NO_READ_AUTHORITY("not have read authority", HttpStatus.UNAUTHORIZED),
     ;
 
     private final String message;

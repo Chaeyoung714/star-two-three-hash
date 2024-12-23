@@ -7,6 +7,8 @@ import miniproject.star_two_three.domain.Message;
 import miniproject.star_two_three.domain.Room;
 import miniproject.star_two_three.dto.message.MessageResponseDTO;
 import miniproject.star_two_three.dto.message.MessageRequestDTO;
+import miniproject.star_two_three.exception.CustomException;
+import miniproject.star_two_three.exception.Exceptions;
 import miniproject.star_two_three.repository.MessageRepository;
 import miniproject.star_two_three.repository.RoomRepository;
 import miniproject.star_two_three.security.util.HashDecoder;
@@ -34,8 +36,12 @@ public class MessageService {
     }
 
     public ResponseEntity<MessageResponseDTO> readDetailMessage(Long roomId, Long messageId) {
+        //TODO : 자기 메세지만 볼 수 있게 해야함
         try {
             Message message = messageRepository.findById(messageId);
+            if (!message.getRoom().equals(roomRepository.findByRoomId(roomId))) {
+                throw new CustomException(Exceptions.NO_READ_AUTHORITY);
+            }
             return ResponseEntity.ok()
                     .body(new MessageResponseDTO(message.getId(), message.getNickname(), message.getBody()));
         } catch (NoResultException e) {
