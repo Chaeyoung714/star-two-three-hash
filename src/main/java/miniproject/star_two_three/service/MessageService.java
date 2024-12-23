@@ -39,6 +39,7 @@ public class MessageService {
             return ResponseEntity.ok()
                     .body(new MessageResponseDTO(message.getId(), message.getNickname(), message.getBody()));
         } catch (NoResultException e) {
+            //TODO : NoResultException이 떠도 잡히지가 않고 서버에러로 뜸
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(null); //TODO : 응답형식 통일하기
         }
