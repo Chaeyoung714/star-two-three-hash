@@ -1,4 +1,4 @@
-package miniproject.star_two_three.filter;
+package miniproject.star_two_three.security.filter;
 
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;

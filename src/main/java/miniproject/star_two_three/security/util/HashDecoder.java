@@ -1,4 +1,4 @@
-package miniproject.star_two_three.util;
+package miniproject.star_two_three.security.util;
 
 import java.util.Base64;
 import javax.crypto.Cipher;

@@ -1,7 +1,6 @@
-package miniproject.star_two_three.jwt;
+package miniproject.star_two_three.security.jwt;
 
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;

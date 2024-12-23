@@ -3,15 +3,12 @@ package miniproject.star_two_three;
 import io.github.cdimascio.dotenv.Dotenv;
 import java.sql.Connection;
 import javax.sql.DataSource;
-import miniproject.star_two_three.domain.Member;
-import miniproject.star_two_three.repository.MemberRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 @SpringBootTest
 public class LocalDatasourceConnectionTest {
@@ -20,9 +17,6 @@ public class LocalDatasourceConnectionTest {
 
     @Autowired
     private ApplicationContext context;
-
-    @Autowired
-    private MemberRepository memberRepository;
 
     @BeforeAll
     static void setUp() {

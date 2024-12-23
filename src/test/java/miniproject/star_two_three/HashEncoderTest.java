@@ -1,6 +1,6 @@
 package miniproject.star_two_three;
 
-import miniproject.star_two_three.util.HashEncoder;
+import miniproject.star_two_three.security.util.HashEncoder;
 import org.junit.jupiter.api.Test;
 
 public class HashEncoderTest {
