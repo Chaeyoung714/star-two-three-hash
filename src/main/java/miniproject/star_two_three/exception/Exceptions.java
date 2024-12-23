@@ -3,18 +3,18 @@ package miniproject.star_two_three.exception;
 import org.springframework.http.HttpStatus;
 
 public enum Exceptions {
-    EXPIRED_TOKEN("expired token", HttpStatus.UNAUTHORIZED),
-    NOT_ACCESS_TOKEN("not access token", HttpStatus.UNAUTHORIZED),
-    INVALID_TOKEN_TYPE("invalid token type", HttpStatus.UNAUTHORIZED),
-    NO_TOKEN("no token", HttpStatus.UNAUTHORIZED),
-    INVALID_TOKEN("invalid token", HttpStatus.UNAUTHORIZED),
+    EXPIRED_TOKEN("Expired token.", HttpStatus.UNAUTHORIZED),
+    INVALID_TOKEN_TYPE("Invalid Token Type.", HttpStatus.UNAUTHORIZED),
+    NO_TOKEN("Cannot Find Token.", HttpStatus.UNAUTHORIZED),
+    INVALID_TOKEN("Invalid Token Format.", HttpStatus.UNAUTHORIZED),
+    NOT_ACCESS_TOKEN("Not Access Token.", HttpStatus.UNAUTHORIZED),
+    NOT_REFRESH_TOKEN("Not Refresh Token.", HttpStatus.UNAUTHORIZED),
+    NO_READ_AUTHORITY("Doesn't Have Read Authority.", HttpStatus.UNAUTHORIZED),
 
-    NOT_REFRESH_TOKEN("not refresh token", HttpStatus.UNAUTHORIZED),
-    NO_READ_AUTHORITY("not have read authority", HttpStatus.UNAUTHORIZED),
-    MESSAGE_NOT_FOUND("message of such id not found", HttpStatus.BAD_REQUEST),
-    ROOM_NOT_FOUND("room of such id not found", HttpStatus.BAD_REQUEST),
-    INVALID_PASSWORD("invalid password", HttpStatus.BAD_REQUEST),
-    WRONG_PASSWORD("wrong password", HttpStatus.BAD_REQUEST),
+    MESSAGE_NOT_FOUND("Message of Such Id Not Found.", HttpStatus.BAD_REQUEST),
+    ROOM_NOT_FOUND("Room of Such Id Not Found.", HttpStatus.BAD_REQUEST),
+    INVALID_PASSWORD("Invalid Password Format.", HttpStatus.BAD_REQUEST),
+    WRONG_PASSWORD("Wrong Password.", HttpStatus.BAD_REQUEST),
     ;
 
     private final String message;
