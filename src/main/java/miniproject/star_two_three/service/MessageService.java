@@ -30,7 +30,7 @@ public class MessageService {
         //TODO : 페이지네이션
         List<Message> messages = messageRepository.findAllByRoomId(roomId);
         List<MessageResponseDTO> response = messages.stream()
-                .map(m -> new MessageResponseDTO(m.getId(), m.getNickname(), m.getBody()))
+                .map(m -> new MessageResponseDTO(m.getId(), m.getSender(), m.getBody()))
                 .toList();
         return ResponseEntity.ok()
                 .body(response);
@@ -40,7 +40,7 @@ public class MessageService {
         try {
             Message message = findMessageByIdOrElseException(messageId, roomId);
             return ResponseEntity.ok()
-                    .body(new MessageResponseDTO(message.getId(), message.getNickname(), message.getBody()));
+                    .body(new MessageResponseDTO(message.getId(), message.getSender(), message.getBody()));
         } catch (CustomException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(null); //TODO : 응답형식 통일하기
@@ -51,11 +51,11 @@ public class MessageService {
         try {
             Long roomId = Long.valueOf(HashDecoder.decrypt(request.getRoomSignature()));
             Room room = findRoomByIdOrElseException(roomId);
-            Message message = new Message(request.getNickname(), request.getBody(), room);
+            Message message = new Message(room, request.getBody(), request.getSender());
             messageRepository.save(message);
             room.updateMessage(message);
             return ResponseEntity.ok()
-                    .body(new MessageResponseDTO(message.getId(), message.getNickname(), message.getBody()));
+                    .body(new MessageResponseDTO(message.getId(), message.getSender(), message.getBody()));
 
         } catch (CustomException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -69,7 +69,7 @@ public class MessageService {
             messageRepository.delete(message);
             return ResponseEntity.status(HttpStatus.NO_CONTENT)
                     .body("successfully deleted");
-        } catch (NoResultException e) {
+        } catch (CustomException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(null);
         }
@@ -80,7 +80,7 @@ public class MessageService {
         if (message.isEmpty()) {
             throw new CustomException(Exceptions.MESSAGE_NOT_FOUND);
         }
-        if (!message.get().getRoom().equals(roomRepository.findByRoomId(roomId))) {
+        if (!message.get().getRoom().equals(findRoomByIdOrElseException(roomId))) {
             throw new CustomException(Exceptions.NO_READ_AUTHORITY);
         }
         return message.get();

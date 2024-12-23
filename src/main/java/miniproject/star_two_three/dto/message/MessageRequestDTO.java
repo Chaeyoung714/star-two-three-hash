@@ -9,13 +9,13 @@ public class MessageRequestDTO {
     @JsonProperty("room_signature")
     private String roomSignature;
 
-    private String nickname;
+    private String sender;
 
     private String body;
 
-    public MessageRequestDTO(String roomSignature, String nickname, String body) {
+    public MessageRequestDTO(String roomSignature, String sender, String body) {
         this.roomSignature = roomSignature;
-        this.nickname = nickname;
+        this.sender = sender;
         this.body = body;
     }
 }

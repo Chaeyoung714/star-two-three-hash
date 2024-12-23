@@ -22,7 +22,7 @@ public class Message {
     @Column(name = "message_id")
     private Long id;
 
-    private String nickname;
+    private String sender;
 
     private String body;
 
@@ -30,9 +30,9 @@ public class Message {
     @JoinColumn(name = "room_id") //FK이자 연관관계의 주인필드
     private Room room;
 
-    public Message(String nickname, String body, Room room) {
-        this.nickname = nickname;
-        this.body = body;
+    public Message(Room room, String body, String sender) {
         this.room = room;
+        this.body = body;
+        this.sender = sender;
     }
 }
