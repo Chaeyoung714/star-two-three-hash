@@ -2,6 +2,7 @@ package miniproject.star_two_three.service;
 
 import jakarta.persistence.NoResultException;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import miniproject.star_two_three.domain.Message;
 import miniproject.star_two_three.domain.Room;
@@ -36,16 +37,11 @@ public class MessageService {
     }
 
     public ResponseEntity<MessageResponseDTO> readDetailMessage(Long roomId, Long messageId) {
-        //TODO : 자기 메세지만 볼 수 있게 해야함
         try {
-            Message message = messageRepository.findById(messageId);
-            if (!message.getRoom().equals(roomRepository.findByRoomId(roomId))) {
-                throw new CustomException(Exceptions.NO_READ_AUTHORITY);
-            }
+            Message message = findMessageByIdOrElseException(messageId, roomId);
             return ResponseEntity.ok()
                     .body(new MessageResponseDTO(message.getId(), message.getNickname(), message.getBody()));
-        } catch (NoResultException e) {
-            //TODO : NoResultException이 떠도 잡히지가 않고 서버에러로 뜸
+        } catch (CustomException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(null); //TODO : 응답형식 통일하기
         }
@@ -69,7 +65,7 @@ public class MessageService {
 
     public ResponseEntity<String> deleteMessage(Long roomId, Long messageId) {
         try {
-            Message message = messageRepository.findById(messageId);
+            Message message = findMessageByIdOrElseException(messageId, roomId);
             messageRepository.delete(message);
             return ResponseEntity.status(HttpStatus.NO_CONTENT)
                     .body("successfully deleted");
@@ -77,5 +73,16 @@ public class MessageService {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(null);
         }
+    }
+
+    private Message findMessageByIdOrElseException(Long messageId, Long roomId) {
+        Optional<Message> message = messageRepository.findById(messageId);
+        if (message.isEmpty()) {
+            throw new CustomException(Exceptions.MESSAGE_NOT_FOUND);
+        }
+        if (!message.get().getRoom().equals(roomRepository.findByRoomId(roomId))) {
+            throw new CustomException(Exceptions.NO_READ_AUTHORITY);
+        }
+        return message.get();
     }
 }

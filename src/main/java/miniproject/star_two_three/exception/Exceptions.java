@@ -11,6 +11,7 @@ public enum Exceptions {
 
     NOT_REFRESH_TOKEN("not refresh token", HttpStatus.UNAUTHORIZED),
     NO_READ_AUTHORITY("not have read authority", HttpStatus.UNAUTHORIZED),
+    MESSAGE_NOT_FOUND("message of such id not found", HttpStatus.BAD_REQUEST),
     ;
 
     private final String message;
