@@ -14,7 +14,7 @@ public enum Exceptions {
     MESSAGE_NOT_FOUND("Message of Such Id Not Found.", HttpStatus.BAD_REQUEST),
     ROOM_NOT_FOUND("Room of Such Id Not Found.", HttpStatus.BAD_REQUEST),
     INVALID_PASSWORD("Invalid Password Format.", HttpStatus.BAD_REQUEST),
-    WRONG_PASSWORD("Wrong Password.", HttpStatus.BAD_REQUEST),
+    WRONG_PASSWORD("비밀번호가 일치하지 않습니다.", HttpStatus.BAD_REQUEST),
     ;
 
     private final String message;
