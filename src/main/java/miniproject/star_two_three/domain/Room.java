@@ -14,6 +14,8 @@ import java.util.List;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import miniproject.star_two_three.exception.CustomException;
+import miniproject.star_two_three.exception.Exceptions;
 import org.springframework.validation.annotation.Validated;
 
 @Validated
@@ -28,7 +30,7 @@ public class Room {
     private Long id;
 
     @NotNull @NotEmpty(message = "Title must not be empty.")
-    @Size(min = 1, max = 10, message = "Title length must be 1 to 10.")
+    @Size(min = 1, max = 20, message = "Title length must be 1 to 20.")
     private String title;
 
     @NotNull @NotEmpty(message = "Password must not be empty.")
@@ -50,6 +52,9 @@ public class Room {
     }
 
     public void setSignature(String signature) {
+        if (signature.contains("/")) {
+            throw new IllegalStateException("Invalid room signature with slash");
+        }
         this.signature = signature;
     }
 }

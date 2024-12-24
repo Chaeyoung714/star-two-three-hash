@@ -37,14 +37,14 @@ public class RoomController {
         return roomService.login(requestDTO);
     }
 
-    @GetMapping("/token/reissue")
+    @PostMapping("/token/reissue")
     public ResponseEntity<TokenResponseDTO> reissueToken(
             HttpServletRequest request
     ) {
         return roomService.reissueToken(request);
     }
 
-    @GetMapping
+    @GetMapping("/signout")
     public ResponseEntity<Void> logoutRoom(
             HttpServletRequest request
     ) {
