@@ -49,7 +49,7 @@ public class RoomService {
                 .httpOnly(true)
                 .secure(true)
                 .path("/")
-                .sameSite("Strict")
+                .sameSite("None")
                 .build();
 
         return ResponseEntity.ok()
@@ -73,7 +73,7 @@ public class RoomService {
                     .httpOnly(true)
                     .secure(true)
                     .path("/")
-                    .sameSite("Strict")
+                    .sameSite("None")
                     .build();
             return ResponseEntity.ok()
                     .header(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString())
