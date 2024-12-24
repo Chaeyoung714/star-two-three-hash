@@ -1,5 +1,6 @@
 package miniproject.star_two_three.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +37,7 @@ public class MessageService {
         Pageable pageable = PageRequest.of(pagePointer, pageSize);
         Page<Message> pagedMessages = messageRepository.findPageByRoomId(roomId, pageable);
         List<MessageResponseDTO> response = pagedMessages.getContent().stream()
-                .map(m -> new MessageResponseDTO(m.getId(), m.getSender(), m.getBody()))
+                .map(m -> new MessageResponseDTO(m.getId(), m.getSender(), m.getCreatedAt(), m.getBody()))
                 .toList();
         return ResponseEntity.ok()
                 .body(new PagedMessagesResponseDTO(pagedMessages.getNumber()
@@ -49,17 +50,17 @@ public class MessageService {
     public ResponseEntity<MessageResponseDTO> readDetailMessage(Long roomId, Long messageId) {
         Message message = findMessageByIdOrElseException(messageId, roomId);
         return ResponseEntity.ok()
-                .body(new MessageResponseDTO(message.getId(), message.getSender(), message.getBody()));
+                .body(new MessageResponseDTO(message.getId(), message.getSender(), message.getCreatedAt(), message.getBody()));
     }
 
     public ResponseEntity<MessageResponseDTO> createMessage(MessageRequestDTO request) {
         Long roomId = Long.valueOf(hashDecoder.decrypt(request.getRoomSignature()));
         Room room = findRoomByIdOrElseException(roomId);
-        Message message = new Message(room, request.getBody(), request.getSender());
+        Message message = new Message(room, request.getBody(), request.getSender(), LocalDateTime.now());
         messageRepository.save(message);
         room.updateMessage(message);
         return ResponseEntity.ok()
-                .body(new MessageResponseDTO(message.getId(), message.getSender(), message.getBody()));
+                .body(new MessageResponseDTO(message.getId(), message.getSender(), message.getCreatedAt(), message.getBody()));
     }
 
     public ResponseEntity<Void> deleteMessage(Long roomId, Long messageId) {

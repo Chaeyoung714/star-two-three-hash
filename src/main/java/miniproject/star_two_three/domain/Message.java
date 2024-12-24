@@ -11,6 +11,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -35,13 +36,17 @@ public class Message {
     @Size(min = 1, max = 500, message = "Message text length must be 1 to 500.")
     private String body;
 
+    @NotNull
+    private LocalDateTime createdAt;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "room_id")
     private Room room;
 
-    public Message(Room room, String body, String sender) {
+    public Message(Room room, String body, String sender, LocalDateTime createdAt) {
         this.room = room;
         this.body = body;
         this.sender = sender;
+        this.createdAt = createdAt;
     }
 }
