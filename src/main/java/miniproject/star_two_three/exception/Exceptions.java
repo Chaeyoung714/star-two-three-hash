@@ -10,6 +10,7 @@ public enum Exceptions {
     NOT_ACCESS_TOKEN("Not Access Token.", HttpStatus.UNAUTHORIZED),
     NOT_REFRESH_TOKEN("Not Refresh Token.", HttpStatus.UNAUTHORIZED),
     NO_READ_AUTHORITY("Doesn't Have Read Authority.", HttpStatus.UNAUTHORIZED),
+    BLACKLISTED_TOKEN("Blacklisted Token.", HttpStatus.UNAUTHORIZED),
 
     MESSAGE_NOT_FOUND("Message of Such Id Not Found.", HttpStatus.BAD_REQUEST),
     ROOM_NOT_FOUND("Room of Such Id Not Found.", HttpStatus.BAD_REQUEST),

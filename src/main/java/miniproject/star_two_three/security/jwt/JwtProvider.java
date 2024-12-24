@@ -30,6 +30,7 @@ public class JwtProvider {
     @Value("${spring.jwt.secret-key}")
     private String key;
     private SecretKey secretKey;
+    private final MemoryBlackList blackList;
 
     @PostConstruct
     public void init() {
@@ -69,22 +70,24 @@ public class JwtProvider {
         if (!claims.get("type").equals(TokenType.REFRESH.name())) {
             throw new CustomException(Exceptions.NOT_REFRESH_TOKEN);
         }
-        Long memberId = Long.parseLong(claims.getSubject());
-        return new TokenResponseDTO(createToken(memberId, TokenType.ACCESS));
+        if (blackList.containsToken(refreshToken)) {
+            throw new CustomException(Exceptions.BLACKLISTED_TOKEN);
+        }
+        Long roomId = Long.parseLong(claims.getSubject());
+        blackList.putToken(refreshToken, claims.getExpiration().toString());
+        return new TokenResponseDTO(createToken(roomId, TokenType.ACCESS));
     }
 
-
     /*로그아웃*/
-//    public void logout(String accessToken, String refreshToken) {
-//        Date accessTokenExpiration = Jwts.parser().verifyWith(secretKey).build()
-//                .parseSignedClaims(accessToken).getPayload().getExpiration();
-//        Date refreshTokenExpiration = Jwts.parser().verifyWith(secretKey).build()
-//                .parseSignedClaims(refreshToken).getPayload().getExpiration();
-//
-//        blackList.putToken(accessToken, accessTokenExpiration.toString());
-//        blackList.putToken(refreshToken, refreshTokenExpiration.toString());
-//    }
+    public void logout(String accessToken, String refreshToken) {
+        Date accessTokenExpiration = Jwts.parser().verifyWith(secretKey).build()
+                .parseSignedClaims(accessToken).getPayload().getExpiration();
+        Date refreshTokenExpiration = Jwts.parser().verifyWith(secretKey).build()
+                .parseSignedClaims(refreshToken).getPayload().getExpiration();
 
+        blackList.putToken(accessToken, accessTokenExpiration.toString());
+        blackList.putToken(refreshToken, refreshTokenExpiration.toString());
+    }
 
     /*토큰 유효성 확인 및 유저 ID 추출*/
     public Long getRoomId(HttpServletRequest request) {
@@ -96,6 +99,9 @@ public class JwtProvider {
                     .getPayload();
             Date now = new Date();
 
+            if (blackList.containsToken(token)) {
+                throw new CustomException(Exceptions.BLACKLISTED_TOKEN);
+            }
             if (claims.getExpiration().before(now)) {
                 throw new CustomException(Exceptions.EXPIRED_TOKEN);
             }

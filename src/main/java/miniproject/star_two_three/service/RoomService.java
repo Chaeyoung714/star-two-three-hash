@@ -96,4 +96,8 @@ public class RoomService {
         }
         return room.get();
     }
+
+    public ResponseEntity<String> logout(HttpServletRequest request) {
+
+    }
 }
