@@ -9,7 +9,6 @@ import miniproject.star_two_three.dto.room.RoomRequestDTO;
 import miniproject.star_two_three.dto.room.RoomResponseDTO;
 import miniproject.star_two_three.dto.room.RoomTitleRequestDTO;
 import miniproject.star_two_three.dto.room.RoomTitleResponseDTO;
-import miniproject.star_two_three.security.jwt.JwtProvider;
 import miniproject.star_two_three.service.RoomService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
