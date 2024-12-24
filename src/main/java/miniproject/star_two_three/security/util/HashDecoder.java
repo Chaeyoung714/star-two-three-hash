@@ -4,6 +4,8 @@ import java.util.Base64;
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
+import miniproject.star_two_three.exception.CustomException;
+import miniproject.star_two_three.exception.Exceptions;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -24,7 +26,7 @@ public class HashDecoder {
             byte[] decryptedBytes = cipher.doFinal(Base64.getUrlDecoder().decode(encryptedValue));
             return new String(decryptedBytes);
         } catch (Exception e) {
-            throw new IllegalStateException("unexpected exception during decoding");
+            throw new CustomException(Exceptions.INVALID_ROOM_SIGNATURE);
         }
     }
 }

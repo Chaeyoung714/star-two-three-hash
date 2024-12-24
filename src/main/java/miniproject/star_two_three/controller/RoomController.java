@@ -7,7 +7,6 @@ import miniproject.star_two_three.dto.jwt.TokenResponseDTO;
 import miniproject.star_two_three.dto.room.LoginRequestDTO;
 import miniproject.star_two_three.dto.room.RoomRequestDTO;
 import miniproject.star_two_three.dto.room.RoomResponseDTO;
-import miniproject.star_two_three.dto.room.RoomTitleRequestDTO;
 import miniproject.star_two_three.dto.room.RoomTitleResponseDTO;
 import miniproject.star_two_three.service.RoomService;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -54,8 +54,8 @@ public class RoomController {
 
     @GetMapping("/get/title")
     public ResponseEntity<RoomTitleResponseDTO> getRoomTitle(
-            @Valid @RequestBody RoomTitleRequestDTO request
+            @RequestParam(name = "room") String roomSignature
     ) {
-        return roomService.getRoomTitle(request.getRoomSignature());
+        return roomService.getRoomTitle(roomSignature);
     }
 }
