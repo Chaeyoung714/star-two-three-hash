@@ -21,7 +21,7 @@ public class HashDecoder {
             SecretKey secretKey = new SecretKeySpec(SECRET_KEY, "AES");
             cipher.init(Cipher.DECRYPT_MODE, secretKey);
 
-            byte[] decryptedBytes = cipher.doFinal(Base64.getDecoder().decode(encryptedValue));
+            byte[] decryptedBytes = cipher.doFinal(Base64.getUrlDecoder().decode(encryptedValue));
             return new String(decryptedBytes);
         } catch (Exception e) {
             throw new IllegalStateException("unexpected exception during decoding");

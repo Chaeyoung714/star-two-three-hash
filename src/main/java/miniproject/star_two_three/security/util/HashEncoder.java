@@ -21,7 +21,7 @@ public class HashEncoder {
             cipher.init(Cipher.ENCRYPT_MODE, secretKey);
 
             byte[] encryptedBytes = cipher.doFinal(value.toString().getBytes());
-            return Base64.getEncoder().encodeToString(encryptedBytes);
+            return Base64.getUrlEncoder().encodeToString(encryptedBytes);
         } catch (Exception e) {
             throw new IllegalStateException("unexpected exception during encoding");
         }
