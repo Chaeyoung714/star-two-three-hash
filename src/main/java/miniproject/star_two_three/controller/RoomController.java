@@ -45,7 +45,7 @@ public class RoomController {
     }
 
     @GetMapping
-    public ResponseEntity<String> logoutRoom(
+    public ResponseEntity<Void> logoutRoom(
             HttpServletRequest request
     ) {
         return roomService.logout(request);

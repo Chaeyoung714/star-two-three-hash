@@ -97,7 +97,9 @@ public class RoomService {
         return room.get();
     }
 
-    public ResponseEntity<String> logout(HttpServletRequest request) {
-
+    public ResponseEntity<Void> logout(HttpServletRequest request) {
+        String refreshToken = CookieParser.parseRefreshToken(request);
+        jwtProvider.logout(refreshToken);
+        return ResponseEntity.ok().build();
     }
 }

@@ -52,7 +52,7 @@ public class MessageController {
     }
 
     @DeleteMapping("/delete/{messageId}")
-    public ResponseEntity<String> deleteMessage(
+    public ResponseEntity<Void> deleteMessage(
             HttpServletRequest request
             , @PathVariable(name = "messageId") Long messageId
     ) {

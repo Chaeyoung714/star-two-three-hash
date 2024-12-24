@@ -62,11 +62,10 @@ public class MessageService {
                 .body(new MessageResponseDTO(message.getId(), message.getSender(), message.getBody()));
     }
 
-    public ResponseEntity<String> deleteMessage(Long roomId, Long messageId) {
+    public ResponseEntity<Void> deleteMessage(Long roomId, Long messageId) {
         Message message = findMessageByIdOrElseException(messageId, roomId);
         messageRepository.delete(message);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT)
-                .body("successfully deleted");
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     private Message findMessageByIdOrElseException(Long messageId, Long roomId) {

@@ -79,13 +79,10 @@ public class JwtProvider {
     }
 
     /*로그아웃*/
-    public void logout(String accessToken, String refreshToken) {
-        Date accessTokenExpiration = Jwts.parser().verifyWith(secretKey).build()
-                .parseSignedClaims(accessToken).getPayload().getExpiration();
+    public void logout(String refreshToken) {
         Date refreshTokenExpiration = Jwts.parser().verifyWith(secretKey).build()
                 .parseSignedClaims(refreshToken).getPayload().getExpiration();
 
-        blackList.putToken(accessToken, accessTokenExpiration.toString());
         blackList.putToken(refreshToken, refreshTokenExpiration.toString());
     }
 
