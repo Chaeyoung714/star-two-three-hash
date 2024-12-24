@@ -8,6 +8,7 @@ import miniproject.star_two_three.dto.jwt.TokenResponseDTO;
 import miniproject.star_two_three.dto.room.LoginRequestDTO;
 import miniproject.star_two_three.dto.room.RoomRequestDTO;
 import miniproject.star_two_three.dto.room.RoomResponseDTO;
+import miniproject.star_two_three.dto.room.RoomTitleResponseDTO;
 import miniproject.star_two_three.exception.CustomException;
 import miniproject.star_two_three.exception.Exceptions;
 import miniproject.star_two_three.security.jwt.JwtProvider;
@@ -82,11 +83,25 @@ public class RoomService {
         throw new CustomException(Exceptions.WRONG_PASSWORD);
     }
 
+    public ResponseEntity<Void> logout(HttpServletRequest request) {
+        String refreshToken = CookieParser.parseRefreshToken(request);
+        jwtProvider.logout(refreshToken);
+        return ResponseEntity.ok().build();
+    }
+
     public ResponseEntity<TokenResponseDTO> reissueToken(HttpServletRequest request) {
         String refreshToken = CookieParser.parseRefreshToken(request);
         TokenResponseDTO tokens = jwtProvider.refreshAccessToken(refreshToken);
         return ResponseEntity.ok()
                 .body(tokens);
+    }
+
+    public ResponseEntity<RoomTitleResponseDTO> getRoomTitle(String roomSignature) {
+        Long roomId = Long.valueOf(hashDecoder.decrypt(roomSignature));
+        Room room = findRoomByIdOrElseException(roomId);
+        return ResponseEntity.ok()
+                .body(new RoomTitleResponseDTO(room.getTitle()));
+
     }
 
     private Room findRoomByIdOrElseException(Long roomId) {
@@ -95,11 +110,5 @@ public class RoomService {
             throw new CustomException(Exceptions.ROOM_NOT_FOUND);
         }
         return room.get();
-    }
-
-    public ResponseEntity<Void> logout(HttpServletRequest request) {
-        String refreshToken = CookieParser.parseRefreshToken(request);
-        jwtProvider.logout(refreshToken);
-        return ResponseEntity.ok().build();
     }
 }

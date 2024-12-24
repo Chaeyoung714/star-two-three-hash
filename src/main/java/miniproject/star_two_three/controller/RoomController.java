@@ -7,6 +7,8 @@ import miniproject.star_two_three.dto.jwt.TokenResponseDTO;
 import miniproject.star_two_three.dto.room.LoginRequestDTO;
 import miniproject.star_two_three.dto.room.RoomRequestDTO;
 import miniproject.star_two_three.dto.room.RoomResponseDTO;
+import miniproject.star_two_three.dto.room.RoomTitleRequestDTO;
+import miniproject.star_two_three.dto.room.RoomTitleResponseDTO;
 import miniproject.star_two_three.security.jwt.JwtProvider;
 import miniproject.star_two_three.service.RoomService;
 import org.springframework.http.ResponseEntity;
@@ -37,6 +39,13 @@ public class RoomController {
         return roomService.login(requestDTO);
     }
 
+    @PostMapping("/signout")
+    public ResponseEntity<Void> logoutRoom(
+            HttpServletRequest request
+    ) {
+        return roomService.logout(request);
+    }
+
     @PostMapping("/token/reissue")
     public ResponseEntity<TokenResponseDTO> reissueToken(
             HttpServletRequest request
@@ -44,10 +53,10 @@ public class RoomController {
         return roomService.reissueToken(request);
     }
 
-    @GetMapping("/signout")
-    public ResponseEntity<Void> logoutRoom(
-            HttpServletRequest request
+    @GetMapping("/get/title")
+    public ResponseEntity<RoomTitleResponseDTO> getRoomTitle(
+            @Valid @RequestBody RoomTitleRequestDTO request
     ) {
-        return roomService.logout(request);
+        return roomService.getRoomTitle(request.getRoomSignature());
     }
 }
