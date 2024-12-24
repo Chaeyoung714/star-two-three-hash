@@ -22,6 +22,8 @@ public class CorsFilter implements Filter {
     private static final List<String> ALLOWED_ORIGINS = Arrays.asList(
             "http://localhost:3000",
             "https://localhost:3000",
+            "http://localhost:5173",
+            "https://localhost:5173",
             "http://3.38.8.19.nip.io",
             "https://3.38.8.19.nip.io"
     );

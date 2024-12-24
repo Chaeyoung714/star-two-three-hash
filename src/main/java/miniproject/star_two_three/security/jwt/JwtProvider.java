@@ -31,7 +31,6 @@ public class JwtProvider {
     private String key;
     private SecretKey secretKey;
 
-
     @PostConstruct
     public void init() {
         this.secretKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(key));
