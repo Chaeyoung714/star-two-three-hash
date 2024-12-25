@@ -24,9 +24,9 @@ public class CorsFilter implements Filter {
             "https://localhost:3000",
             "http://localhost:5173",
             "https://localhost:5173",
-            "http://3.38.8.19.nip.io",
-            "https://3.38.8.19.nip.io",
-            "https://star23sharp.vercel.app"
+            "http://api.star23sharp.site",
+            "https://api.star23sharp.site",
+            "https://star23sharp.site"
     );
 
     @Override
