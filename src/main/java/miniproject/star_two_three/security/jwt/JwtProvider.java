@@ -74,7 +74,6 @@ public class JwtProvider {
             throw new CustomException(Exceptions.BLACKLISTED_TOKEN);
         }
         Long roomId = Long.parseLong(claims.getSubject());
-        blackList.putToken(refreshToken, claims.getExpiration().toString());
         return new TokenResponseDTO(createToken(roomId, TokenType.ACCESS));
     }
 
