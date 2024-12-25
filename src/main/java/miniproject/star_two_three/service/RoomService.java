@@ -51,6 +51,7 @@ public class RoomService {
                 .secure(true)
                 .path("/")
                 .sameSite("None")
+                .maxAge(60 * 60 * 24 * 7)
                 .build();
 
         return ResponseEntity.ok()
@@ -75,6 +76,7 @@ public class RoomService {
                     .secure(true)
                     .path("/")
                     .sameSite("None")
+                    .maxAge(60 * 60 * 24 * 7)
                     .build();
             return ResponseEntity.ok()
                     .header(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString())
