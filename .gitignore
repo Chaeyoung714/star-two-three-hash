@@ -41,3 +41,7 @@ out/
 
 ### local ###
 src/main/resources/application-local.yml
+
+### cert ###
+cert/*
+init-letsencrypt.sh
