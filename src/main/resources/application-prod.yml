@@ -17,3 +17,8 @@ spring:
   logging.level:
     org.hibernate.SQL: warn
     org.hibernate.type: warn
+  logging:
+    file:
+      name: /var/logs/spring-app.log
+    level:
+      root: info

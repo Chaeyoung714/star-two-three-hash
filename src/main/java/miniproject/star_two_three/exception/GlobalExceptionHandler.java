@@ -1,6 +1,8 @@
 package miniproject.star_two_three.exception;
 
 import jakarta.validation.ConstraintViolationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -10,11 +12,14 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
+    private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
     @ExceptionHandler(CustomException.class)
     public ResponseEntity<ErrorResponse> handleCustomException(CustomException ex) {
         HttpStatus status = ex.getHttpStatus();
         String message = ex.getMessage();
         ErrorResponse errorResponse = new ErrorResponse(status.value(), message);
+        logger.error(String.format("[ERROR] %s", errorResponse.getMessage()));
         return new ResponseEntity<>(errorResponse, status);
     }
 
