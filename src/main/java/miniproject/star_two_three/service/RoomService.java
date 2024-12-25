@@ -47,6 +47,7 @@ public class RoomService {
         String accessToken = jwtProvider.createToken(room.getId(), TokenType.ACCESS);
         String refreshToken = jwtProvider.createToken(room.getId(), TokenType.REFRESH);
         ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", refreshToken)
+                .domain("3.38.8.19.nip.io")
                 .httpOnly(true)
                 .secure(true)
                 .path("/")
@@ -72,6 +73,7 @@ public class RoomService {
             String accessToken = jwtProvider.createToken(room.getId(), TokenType.ACCESS);
             String refreshToken = jwtProvider.createToken(room.getId(), TokenType.REFRESH);
             ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", refreshToken)
+                    .domain("3.38.8.19.nip.io")
                     .httpOnly(true)
                     .secure(true)
                     .path("/")
