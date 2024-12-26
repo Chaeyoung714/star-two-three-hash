@@ -57,7 +57,7 @@ public class RoomService {
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString())
-                .body(new RoomResponseDTO(room.getSignature() + "yaho", accessToken)); //TODO 수정
+                .body(new RoomResponseDTO(room.getSignature(), accessToken));
     }
 
     private void validatePassword(String password) {

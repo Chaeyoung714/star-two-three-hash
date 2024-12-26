@@ -22,8 +22,6 @@ import org.springframework.stereotype.Component;
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class CorsFilter implements Filter {
 
-    private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class); //TODO ; 수정
-
     private static final List<String> ALLOWED_ORIGINS = Arrays.asList(
             "http://localhost:3000",
             "https://localhost:3000",
@@ -50,10 +48,7 @@ public class CorsFilter implements Filter {
 
         String origin = request.getHeader("Origin");
 
-        logger.info("origin is : " + origin); //TODO delete
-
         if (origin != null && ALLOWED_ORIGINS.contains(origin)) {
-            logger.info("origin found : " + origin); //TODO delete
             response.setHeader("Access-Control-Allow-Origin", origin);
         }
 
