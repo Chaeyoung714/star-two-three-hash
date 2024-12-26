@@ -50,10 +50,10 @@ public class CorsFilter implements Filter {
 
         String origin = request.getHeader("Origin");
 
-        logger.info("origin is : " + origin);
+        logger.info("origin is : " + origin); //TODO delete
 
         if (origin != null && ALLOWED_ORIGINS.contains(origin)) {
-            logger.info("origin found : " + origin);
+            logger.info("origin found : " + origin); //TODO delete
             response.setHeader("Access-Control-Allow-Origin", origin);
         }
 
