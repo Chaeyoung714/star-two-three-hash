@@ -11,6 +11,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import miniproject.star_two_three.exception.GlobalExceptionHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -18,6 +21,8 @@ import org.springframework.stereotype.Component;
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class CorsFilter implements Filter {
+
+    private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class); //TODO ; 수정
 
     private static final List<String> ALLOWED_ORIGINS = Arrays.asList(
             "http://localhost:3000",
@@ -45,9 +50,13 @@ public class CorsFilter implements Filter {
 
         String origin = request.getHeader("Origin");
 
+        logger.info("origin is : " + origin);
+
         if (origin != null && ALLOWED_ORIGINS.contains(origin)) {
+            logger.info("origin found : " + origin);
             response.setHeader("Access-Control-Allow-Origin", origin);
         }
+
 
         response.setHeader("Access-Control-Allow-Credentials", "true");
         response.setHeader("Access-Control-Allow-Methods","GET, POST, PUT, DELETE, OPTIONS");
