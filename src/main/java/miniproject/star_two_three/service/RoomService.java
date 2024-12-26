@@ -51,7 +51,7 @@ public class RoomService {
                 .httpOnly(true)
                 .secure(true)
                 .path("/")
-                .sameSite("Lax")
+                .sameSite("None")
                 .maxAge(60 * 60 * 24 * 7)
                 .build();
 
@@ -77,7 +77,7 @@ public class RoomService {
                     .httpOnly(true)
                     .secure(true)
                     .path("/")
-                    .sameSite("Lax")
+                    .sameSite("None")
                     .maxAge(60 * 60 * 24 * 7)
                     .build();
             return ResponseEntity.ok()
