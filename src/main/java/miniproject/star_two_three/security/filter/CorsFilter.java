@@ -26,7 +26,9 @@ public class CorsFilter implements Filter {
             "https://localhost:5173",
             "http://api.star23sharp.site",
             "https://api.star23sharp.site",
+            "http://star23sharp.site",
             "https://star23sharp.site",
+            "http://www.star23sharp.site",
             "https://www.star23sharp.site"
     );
 
